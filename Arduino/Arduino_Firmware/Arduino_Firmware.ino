@@ -55,5 +55,5 @@ void loop(){
     body = bioHub.readBpm();
     GSRVal = analogRead(GSRPin);
     Serial.println(String(body.heartRate) + "," + String(body.confidence) + "," + String(body.oxygen) + "," + String(body.status) + "," + String(body.extStatus) + "," + String(body.rValue) + "," + String(GSRVal) + "\n");
-    delay(125); // Slowing it down, we don't need to break our necks here.
+    delay(25); // Slowing it down, we don't need to break our necks here.
 }
