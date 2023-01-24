@@ -1,6 +1,3 @@
-[submodule "Hardware/CAD/Prototype_2/PCB/Libraries/arduino_micro_shield"]
-	path = Hardware/CAD/Prototype_2/PCB/Libraries/arduino_micro_shield
-	url = https://github.com/adamf/arduino_micro_shield
 [submodule "Hardware/Prototype_2/PCB/Libraries/arduino_micro_shield"]
 	path = Hardware/Prototype_2/PCB/Libraries/arduino_micro_shield
 	url = https://github.com/adamf/arduino_micro_shield
