@@ -4,3 +4,6 @@
 [submodule "Hardware/Prototype_2/PCB/Libraries/arduino_micro_shield"]
 	path = Hardware/Prototype_2/PCB/Libraries/arduino_micro_shield
 	url = https://github.com/adamf/arduino_micro_shield
+[submodule "Hardware/Prototype_2/PCB/Libraries/digikey-kicad-library"]
+	path = Hardware/Prototype_2/PCB/Libraries/digikey-kicad-library
+	url = https://github.com/Digi-Key/digikey-kicad-library
