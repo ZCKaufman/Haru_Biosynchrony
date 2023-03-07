@@ -33,7 +33,8 @@ int GSRVal;
 void setup(){
 
   // Modify based on desired baud rate
-  Serial.begin(9600); 
+  Serial.begin(9600); //ros serial uses a baud rate of 57600
+  nh.getHardware()->setBaud(57600);
 
   // ROS Setup
   nh.initNode();
@@ -42,26 +43,26 @@ void setup(){
   nh.advertise(oxygen);
   nh.advertise(status);
   nh.advertise(ext_status);
-  nh.advertise(r_value);
+  //nh.advertise(r_value);
   nh.advertise(gsr);
 
   Wire.begin();
   int result = bioHub.begin();
-  if (!result)
-    Serial.println("Sensor started!");
-  else
-    Serial.println("Could not communicate with the sensor!!!");
+  // if (!result)
+    // Serial.println("Sensor started!");
+  // else
+    // Serial.println("Could not communicate with the sensor!!!");
 
-  Serial.println("Configuring Sensor...."); 
+  // Serial.println("Configuring Sensor...."); 
   pinMode(GSRPin, INPUT);
   int error = bioHub.configBpm(MODE_TWO); // Configuring just the BPM settings. 
   if(!error){
-    Serial.println("Sensor configured.");
+    // Serial.println("Sensor configured.");
   }
   else {
-    Serial.println("Error configuring sensor.");
-    Serial.print("Error: "); 
-    Serial.println(error); 
+    // Serial.println("Error configuring sensor.");
+    // Serial.print("Error: "); 
+    // Serial.println(error); 
   }
   // Data lags a bit behind the sensor, if you're finger is on the sensor when
   // it's being configured this delay will give some time for the data to catch
@@ -79,7 +80,7 @@ void loop(){
     // variable.  
     body = bioHub.readBpm();
     GSRVal = analogRead(GSRPin);
-    Serial.println(String(body.heartRate) + "," + String(body.confidence) + "," + String(body.oxygen) + "," + String(body.status) + "," + String(body.extStatus) + "," + String(body.rValue) + "," + String(GSRVal) + "\n");
+    // Serial.println(String(body.heartRate) + "," + String(body.confidence) + "," + String(body.oxygen) + "," + String(body.status) + "," + String(body.extStatus) + "," + String(body.rValue) + "," + String(GSRVal) + "\n");
     str_msg.data = body.heartRate;
     heart_rate.publish(&str_msg);
 
@@ -95,8 +96,8 @@ void loop(){
     str_msg.data = body.extStatus;
     ext_status.publish(&str_msg);
 
-    str_msg.data = body.rValue;
-    r_value.publish(&str_msg);
+    //str_msg.data = body.rValue;
+    //r_value.publish(&str_msg);
 
     str_msg.data = GSRVal;
     gsr.publish(&str_msg);
