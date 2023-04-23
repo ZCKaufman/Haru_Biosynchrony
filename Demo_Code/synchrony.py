@@ -1,8 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[3]:
-
 import neurokit2 as nk
 from scipy import stats
 import numpy as np
@@ -15,103 +10,77 @@ data2 = pandas.read_csv("Data_2.csv")
 #from first user
 HR_1 = data1['Heartrate'].tolist()
 Con_1 = data1['Confidence(HR)'].tolist()
-GSR_1_temp = data1['GSR'].tolist()
-GSR_1_long, ignore1 = nk.eda_process(GSR_1_temp, sampling_rate=40)
-GSR_1 = GSR_1_long["EDA_Clean"]
-pt_1 = data1['#'].tolist()
+GSR_1_temp = data1['GSR'].tolist() #uncleaned GSR data from user 1
+GSR_1_long, ignore1 = nk.eda_process(GSR_1_temp, sampling_rate=40) #processing GSR data from user 1
+GSR_1 = GSR_1_long["EDA_Clean"] #processed data from user 1
 
 #from second user
 HR_2 = data2['Heartrate'].tolist()
 Con_2 = data2['Confidence(HR)'].tolist()
-GSR_2_temp = data1['GSR'].tolist()
-GSR_2_long, ignore2 = nk.eda_process(GSR_2_temp, sampling_rate=40)
-GSR_2 = GSR_2_long["EDA_Clean"]
-pt_2 = data2['#'].tolist()
+GSR_2_temp = data1['GSR'].tolist() #uncleaned GSR data from user 2
+GSR_2_long, ignore2 = nk.eda_process(GSR_2_temp, sampling_rate=40) #processing GSR data from user 2
+GSR_2 = GSR_2_long["EDA_Clean"] #processed data from user 2
 
-#re = 0 #iterating while values are printed to command line; ignore
-
-### before "while not" ###
-
-GSR_1_sec = []
-GSR_1_sec = [0 for j in range(len(GSR_1))]#range(200) in actual
-PPG_1_sec = []
-PPG_1_sec = [0 for k in range(len(HR_1))]#range(200) in actual
-GSR_2_sec = []
-GSR_2_sec = [0 for j in range(len(GSR_2))]#range(200) in actual
-PPG_2_sec = []
-PPG_2_sec = [0 for k in range(len(HR_2))]#range(200) in actual
-
-### after getting ppg and gsr ###
-
-j = 1
-k = 1
-for m in range(len(GSR_1)):
-    GSR_1_sec[m] = GSR_1[m]
+#removal of unclean HR data, or sub-50% confidence HR data
+for m in range(len(HR_1)):
     if Con_1[m] < 50:
-        PPG_1_sec[m] = 0
-    if pt_1[m]%200 == 0:
-        j = 0
-        k = 0
-        GSR_1_sec = [0 for j in range(len(GSR_1))]
-        PPG_1_sec = [0 for k in range(len(HR_1))]
+        HR_1[m] = 0
 
-
-j = 1
-k = 1
-for m in range(len(GSR_2)):
-    GSR_2_sec[m] = GSR_2[m]
+for m in range(len(HR_2)):
     if Con_2[m] < 50:
-        PPG_2_sec[m] = 0
-    if pt_2[m]%200 == 0:
-        j = 0
-        k = 0
-        GSR_2_sec = [0 for j in range(len(GSR_2))]
-        PPG_2_sec = [0 for k in range(len(HR_2))]
-
-
-### then eventually ###
+        HR_2[m] = 0
 
 #Pearson correlation
-#NOTE: this is for csv use; actual streaming code will not be in this loop
 GSR_corr = []
 PPG_corr = []
-GSR_corr = [0 for i in range(len(PPG_1_sec))]
-PPG_corr = [0 for i in range(len(GSR_1_sec))]
-for i in range(len(PPG_1_sec)-1):
-    if np.std(PPG_1_sec) != 0 and np.std(PPG_2_sec) != 0:
-        PPG_corr[i], ignore1 = stats.pearsonr(PPG_1_sec, PPG_2_sec)
+GSR_corr = [0 for i in range(len(HR_1))]
+PPG_corr = [0 for i in range(len(GSR_1))]
+beg = 0
+end = 39
+for i in range(4): #gets 5 correlations, each for 1 second of data
+    if np.std(HR_1[beg:end]) != 0 and np.std(HR_2[beg:end]) != 0:
+        PPG_corr[i], ignore1 = stats.pearsonr(HR_1[beg:end], HR_2[beg:end])
     else:
         PPG_corr[i] = 0
-for i in range(len(GSR_2_sec)-1):
-    if np.std(GSR_1_sec) != 0 and np.std(GSR_2_sec) != 0:
-        GSR_corr[i], ignore2 = stats.pearsonr(GSR_1_sec, GSR_2_sec)
+    beg += 40
+    end += 40
+beg = 0
+end = 39
+for i in range(4):  #gets 5 correlations, each for 1 second of data
+    if np.std(GSR_1[beg:end]) != 0 and np.std(GSR_2[beg:end]) != 0:
+        GSR_corr[i], ignore2 = stats.pearsonr(GSR_1[beg:end], GSR_2[beg:end])
     else:
         GSR_corr[i] = 0
-        
-        
+    beg += 40
+    end += 40    
+                
 #bio-syncrhony for PPG
-PPG_num = 0
-PPG_den = 0
-for i in range(len(PPG_1_sec)):
+PPG_num = 0 #numerator of log equation
+PPG_den = 0 #denominator of log equation
+for i in range(4):
     if PPG_corr[i] > 0:
-        PPG_num = PPG_num + PPG_corr[i]
+        PPG_num = PPG_num + PPG_corr[i] #sum of positive correlations (from each second of data)
     else:
-        PPG_den = PPG_den + PPG_corr[i]
-if PPG_den != 0:
+        PPG_den = PPG_den + PPG_corr[i] #sum of negative correlations (from each second of data)
+if PPG_num == 0:
+    PPG_sync = 0
+elif PPG_den != 0:
     PPG_sync = np.log(PPG_num/abs(PPG_den))
 else:
     PPG_sync = np.nan
 
     
 #bio-syncrhony for GSR
-GSR_num = 0
-GSR_den = 0
-for i in range(len(GSR_1_sec)):
+GSR_num = 0 #numerator of log equation
+GSR_den = 0 #denominator of log equation
+for i in range(4):
     if GSR_corr[i] > 0:
-        GSR_num = GSR_num + GSR_corr[i]
+        GSR_num = GSR_num + GSR_corr[i] #sum of positive correlations (from each second of data)
     else:
-        GSR_den = GSR_den + GSR_corr[i]
-if GSR_den != 0:
+        GSR_den = GSR_den + GSR_corr[i] #sum of negative correlations (from each second of data)
+if GSR_num == 0:
+    GSR_sync = 0
+elif GSR_den != 0:
     GSR_sync = np.log(GSR_num/abs(GSR_den))
 else:
     GSR_sync = np.nan
