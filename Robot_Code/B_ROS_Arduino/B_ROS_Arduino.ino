@@ -2,14 +2,14 @@
 #define USE_USBCON
 #include <Wire.h>
 #include <ros.h>
-#include <std_msgs/String.h>
+#include <std_msgs/Int16.h>
 
 // No other Address options. Does not need to be changed ever.
 #define DEF_ADDR 0x55
 
 // Creates ROS node handle, which takes care of serial communication and creating publishers and subscribers
 ros::NodeHandle nh;
-std_msgs::String str_msg;
+std_msgs::Int16 str_msg;
 
 // Instantiate ROS publishers
 ros::Publisher heart_rate("body_B/heart_rate", &str_msg);

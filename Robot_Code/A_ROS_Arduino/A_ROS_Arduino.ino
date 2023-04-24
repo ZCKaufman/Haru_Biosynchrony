@@ -2,15 +2,15 @@
 #define USE_USBCON
 #include <Wire.h>
 #include <ros.h>
-#include <std_msgs/String.h>
+#include <std_msgs/Int16.h>
 
 // No other Address options. Does not need to be changed ever.
 #define DEF_ADDR 0x55
-encoder_method = "utf-8"
+//encoder_method = "utf-8"
 
 // Creates ROS node handle, which takes care of serial communication and creating publishers and subscribers
 ros::NodeHandle nh;
-std_msgs::String str_msg;
+std_msgs::Int16 str_msg;
 
 // Instantiate ROS publishers
 ros::Publisher heart_rate("body_A/heart_rate", &str_msg);
@@ -83,25 +83,25 @@ void loop(){
     body = bioHub.readBpm();
     GSRVal = analogRead(GSRPin);
     // Serial.println(String(body.heartRate) + "," + String(body.confidence) + "," + String(body.oxygen) + "," + String(body.status) + "," + String(body.extStatus) + "," + String(body.rValue) + "," + String(GSRVal) + "\n");
-    str_msg.data = String(body.heartRate);
+    str_msg.data = body.heartRate;
     heart_rate.publish(&str_msg);
 
-    str_msg.data = String(body.confidence);
+    str_msg.data = body.confidence;
     confidence.publish(&str_msg);
 
-    str_msg.data = String(body.oxygen);
+    str_msg.data = body.oxygen;
     oxygen.publish(&str_msg);
 
-    str_msg.data = String(body.status);
+    str_msg.data = body.status;
     status.publish(&str_msg);
 
-    str_msg.data = String(body.extStatus);
+    str_msg.data = body.extStatus;
     ext_status.publish(&str_msg);
 
     //str_msg.data = body.rValue;
     //r_value.publish(&str_msg);
 
-    str_msg.data = String(GSRVal);
+    str_msg.data = GSRVal;
     gsr.publish(&str_msg);
 
     nh.spinOnce();    
