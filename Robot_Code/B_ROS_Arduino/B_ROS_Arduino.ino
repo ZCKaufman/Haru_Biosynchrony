@@ -11,13 +11,13 @@ ros::NodeHandle nh;
 std_msgs::String str_msg;
 
 // Instantiate ROS publishers
-ros::Publisher heart_rate("body/heart_rate", &str_msg);
-ros::Publisher confidence("body/confidence", &str_msg);
-ros::Publisher oxygen("body/oxygen", &str_msg);
-ros::Publisher status("body/status", &str_msg);
-ros::Publisher ext_status("body/ext_status", &str_msg);
-ros::Publisher r_value("body/r_value", &str_msg);
-ros::Publisher gsr("body/gsr", &str_msg);
+ros::Publisher heart_rate("body_B/heart_rate", &str_msg);
+ros::Publisher confidence("body_B/confidence", &str_msg);
+ros::Publisher oxygen("body_B/oxygen", &str_msg);
+ros::Publisher status("body_B/status", &str_msg);
+ros::Publisher ext_status("body_B/ext_status", &str_msg);
+ros::Publisher r_value("body_B/r_value", &str_msg);
+ros::Publisher gsr("body_B/gsr", &str_msg);
 
 // Reset pin, MFIO pin, GSR pin. Change based on appropriate digital / analog arduino pins.
 const int resPin = 7;
