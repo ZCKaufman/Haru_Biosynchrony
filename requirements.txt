@@ -1,5 +1,7 @@
 scipy
 numpy
 pandas
-matplotlib.pyplot
+matplotlib
 neurokit2
+PyYAML
+rospkg

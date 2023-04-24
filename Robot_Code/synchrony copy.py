@@ -22,17 +22,19 @@ gsr_data_B = []
 i = 1
 
 def listener():
+    print("Listener")
     # Creates ROS listeners for our body A topics
-    rospy.Subscriber("/body_A/heart_rate", String, sampler, 1, 'a')
-    rospy.Subscriber("/body_A/confidence", String, sampler, 2, 'a')
-    rospy.Subscriber("/body_A/gsr", String, sampler, 3, 'a')
+    rospy.Subscriber("/body_A/heart_rate", String, sampler, (1, 'a'))
+    rospy.Subscriber("/body_A/confidence", String, sampler, (2, 'b'))
+    rospy.Subscriber("/body_A/gsr", String, sampler, (3, 'c'))
 
     # Creates ROS listeners for our body B topics
-    rospy.Subscriber("/body_B/heart_rate", String, sampler, 1, 'b')
-    rospy.Subscriber("/body_B/confidence", String, sampler, 2, 'b')
-    rospy.Subscriber("/body_B/gsr", String, sampler, 3, 'b')
+    rospy.Subscriber("/body_B/heart_rate", String, sampler, (1, 'a'))
+    rospy.Subscriber("/body_B/confidence", String, sampler, (2, 'b'))
+    rospy.Subscriber("/body_B/gsr", String, sampler, (3, 'c'))
 
 def sampler(data, metric, device):
+    print("Sampler")
     # Recognize global variables
     global n_samples
     global hr_data_A
@@ -76,6 +78,7 @@ def sampler(data, metric, device):
             gsr_data_B.append(data)
 
 def analysis(HR_A, Con_A, GSR_A, HR_B, Con_B, GSR_B):
+    print("Analysis")
     # Global Variable Recognition
     global hr_data_A
     global con_data_A
@@ -159,3 +162,6 @@ def analysis(HR_A, Con_A, GSR_A, HR_B, Con_B, GSR_B):
     PPG_pub.publish(std_msgs.msg.Float32(PPG_sync))
     GSR_pub.publish(std_msgs.msg.Float32(GSR_sync))
     
+
+if __name__ == '__main__':
+    listener()

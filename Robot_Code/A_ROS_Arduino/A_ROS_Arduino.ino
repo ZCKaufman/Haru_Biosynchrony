@@ -1,4 +1,5 @@
 #include <SparkFun_Bio_Sensor_Hub_Library.h>
+#define USE_USBCON
 #include <Wire.h>
 #include <ros.h>
 #include <std_msgs/String.h>
