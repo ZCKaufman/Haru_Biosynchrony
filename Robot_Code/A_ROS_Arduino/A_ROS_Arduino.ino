@@ -6,6 +6,7 @@
 
 // No other Address options. Does not need to be changed ever.
 #define DEF_ADDR 0x55
+encoder_method = "utf-8"
 
 // Creates ROS node handle, which takes care of serial communication and creating publishers and subscribers
 ros::NodeHandle nh;
@@ -82,25 +83,25 @@ void loop(){
     body = bioHub.readBpm();
     GSRVal = analogRead(GSRPin);
     // Serial.println(String(body.heartRate) + "," + String(body.confidence) + "," + String(body.oxygen) + "," + String(body.status) + "," + String(body.extStatus) + "," + String(body.rValue) + "," + String(GSRVal) + "\n");
-    str_msg.data = body.heartRate;
+    str_msg.data = String(body.heartRate);
     heart_rate.publish(&str_msg);
 
-    str_msg.data = body.confidence;
+    str_msg.data = String(body.confidence);
     confidence.publish(&str_msg);
 
-    str_msg.data = body.oxygen;
+    str_msg.data = String(body.oxygen);
     oxygen.publish(&str_msg);
 
-    str_msg.data = body.status;
+    str_msg.data = String(body.status);
     status.publish(&str_msg);
 
-    str_msg.data = body.extStatus;
+    str_msg.data = String(body.extStatus);
     ext_status.publish(&str_msg);
 
     //str_msg.data = body.rValue;
     //r_value.publish(&str_msg);
 
-    str_msg.data = GSRVal;
+    str_msg.data = String(GSRVal);
     gsr.publish(&str_msg);
 
     nh.spinOnce();    
