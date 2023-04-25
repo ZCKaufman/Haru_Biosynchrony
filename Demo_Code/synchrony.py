@@ -27,7 +27,7 @@ for m in range(len(HR_1)):
         HR_1[m] = 0
 
 for m in range(len(HR_2)):
-    if Con_2[m] < 50:
+    if Con_2[m] < 50: 
         HR_2[m] = 0
 
 #Pearson correlation
