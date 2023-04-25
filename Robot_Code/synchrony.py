@@ -114,65 +114,26 @@ def analysis(HR_A, Con_A, GSR_A, HR_B, Con_B, GSR_B):
             HR_B[m] = 0
 
     # Pearson correlation on GSR and PPG data
-    GSR_corr = [0 for i in range(n_samples)]
-    PPG_corr = [0 for i in range(n_samples)]
-    beg = 0
-    end = sampling_rate - 1
-    for i in range(4): #gets 5 correlations, each for 1 second of data
-        if np.std(HR_A[beg:end]) != 0 and np.std(HR_B[beg:end]) != 0:
-            PPG_corr[i], ignore1 = stats.pearsonr(HR_A[beg:end], HR_B[beg:end])
-        else:
-            PPG_corr[i] = 0
-        beg += 40
-        end += 40
-    beg = 0
-    end = sampling_rate - 1
-    for i in range(4):  #gets 5 correlations, each for 1 second of data
-        if np.std(GSR_A[beg:end]) != 0 and np.std(GSR_B[beg:end]) != 0:
-            GSR_corr[i], ignore2 = stats.pearsonr(GSR_A[beg:end], GSR_B[beg:end])
-        else:
-            GSR_corr[i] = 0
-        beg += 40
-        end += 40    
+    GSR_corr = [0 for i in range(len(HR_1))]
+    PPG_corr = [0 for i in range(len(GSR_1))]
 
-    # Bio-syncrhony for PPG
-    PPG_num = 0 #numerator of log equation
-    PPG_den = 0 #denominator of log equation
-    for i in range(4):
-        if PPG_corr[i] > 0:
-            PPG_num = PPG_num + PPG_corr[i] #sum of positive correlations (from each second of data)
-        else:
-            PPG_den = PPG_den + PPG_corr[i] #sum of negative correlations (from each second of data)
-    if PPG_num == 0:
-        PPG_sync = 0
-    elif PPG_den != 0:
-        PPG_sync = np.log(PPG_num/abs(PPG_den))
+    if np.std(HR_1[0:(len(HR_1)-1)]) != 0 and np.std(HR_2[0:(len(HR_2)-1)]) != 0:
+        PPG_corr, ignore1 = stats.pearsonr(HR_1[0:len(HR_1)-1], HR_2[0:len(HR_2)-1])
     else:
-        PPG_sync = np.nan
+        PPG_corr = 0
+    if np.std(GSR_1[0:len(GSR_1)-1]) != 0 and np.std(GSR_2[0:len(GSR_2)-1]) != 0:
+        GSR_corr, ignore2 = stats.pearsonr(GSR_1[0:len(GSR_1)-1], GSR_2[0:len(GSR_2)-1])
+    else:
+        GSR_corr = 0   
 
-        
-    # Bio-syncrhony for GSR
-    GSR_num = 0 #numerator of log equation
-    GSR_den = 0 #denominator of log equation
-    for i in range(4):
-        if GSR_corr[i] > 0:
-            GSR_num = GSR_num + GSR_corr[i] #sum of positive correlations (from each second of data)
-        else:
-            GSR_den = GSR_den + GSR_corr[i] #sum of negative correlations (from each second of data)
-    if GSR_num == 0:
-        GSR_sync = 0
-    elif GSR_den != 0:
-        GSR_sync = np.log(GSR_num/abs(GSR_den))
-    else:
-        GSR_sync = np.nan
 
     # Publish Data to ROS
-    print("GSR SYNC:", GSR_sync)
-    print("PPG SYNC:", PPG_sync)
+    print("GSR SYNC:", GSR_corr)
+    print("PPG SYNC:", PPG_corr)
     PPG_pub = rospy.Publisher('synchrony/ppg', std_msgs.msg.Float32, queue_size=10)
     GSR_pub = rospy.Publisher('synchrony/gsr', std_msgs.msg.Float32, queue_size=10)
-    PPG_pub.publish(std_msgs.msg.Float32(PPG_sync))
-    GSR_pub.publish(std_msgs.msg.Float32(GSR_sync))
+    PPG_pub.publish(std_msgs.msg.Float32(PPG_corr))
+    GSR_pub.publish(std_msgs.msg.Float32(GSR_corr))
     
 
 if __name__ == '__main__':
