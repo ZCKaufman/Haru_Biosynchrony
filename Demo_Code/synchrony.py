@@ -30,7 +30,7 @@ for m in range(len(HR_2)):
     if Con_2[m] < 50: 
         HR_2[m] = 0
 
-#Pearson correlation
+#Pearson Correlation
 GSR_corr = []
 PPG_corr = []
 GSR_corr = [0 for i in range(len(HR_1))]
