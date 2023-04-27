@@ -19,7 +19,13 @@ Contents:
 
 
 ## Using the Device
-
+- This system uses two devices and finds relative bio-synchrony between them. Ensuring that both devices are currently placed on the participants is important for quality metrics of synchrony. 
+1. Place the compute module on the top of your non-dominant wrist and secure with velcro strap firmly but not uncomfortably
+2. Place the PPG sensor (the one with purple and red wires) on your index finger by slipping your index finger inside the black sleeve so that the red sensor is on the padding at the bottom of your finger
+3. Place the PPG sensor (the one with the two thin wires) on your middle and forefinger by slipping those fingers into the black sleeves so that the metal sensors are on the bottom of the center of your finger
+4. Place your non-dominant hand (the one with the sensors on it) at your waist if standing, or on your lap if sitting
+    - Note: It is best for sensor resolution if the sensors are not moved a lot during the activity, try encouraging participants to keep their non-dominant hand at this position and to use their dominant hand for the activity
+5. Now plug in the compute module to the Haru Zotac computer through a USB port and follow the `Running the Code` instructions
 
 ## Running the Code
 - System Requirements
