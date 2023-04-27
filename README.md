@@ -50,10 +50,10 @@ Contents:
 
 ## Understanding the output
 The output from this program will be a metric of synchrony called a Pearson Correlation and it will update the metric every 5 seconds. There will be a score published for heart rate and GSR separately. The metric will be published on ROS as well as printed to the terminal running the program. 
-- Negative Score (-2 to 0)
+- Negative Score (-1 to 0)
     - A negative score means that the subjects are experiencing negative synchrony, meaning that their heart rate or GSR has an inverse correlation. An inverse correlation means that the subjects' heart rate or GSR data is trending in opposite values from each other. A score of less than -0.5 represents a strong inverse correlation.
 - Zero Score (0)
     - A 0 score means that the two participants are neither in sync nor moving out of sync. Their heart rate and GSR data is not correlated.
-- Positive Score (0 to 2)
+- Positive Score (0 to 1)
     - A positive score means that the subjects are experiencing synchrony, meaning that their heart rate or GSR has a direct correlation. A score of greater than 0.5 represents a strong correlation. 
 
